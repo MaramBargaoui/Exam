@@ -2,6 +2,8 @@
 
 Full-stack customer order management system with **Angular** frontend and **Spring Boot** backend, synced via **OpenAPI/Swagger**.
 
+> **Frontend deliverable:** see the [`frontend/`](frontend/) folder and its [README](frontend/README.md).
+
 ## Project Structure
 
 ```

@@ -1,59 +1,82 @@
-# Frontend
+# Order Management — Exam Project
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.27.
+Full-stack customer order management system with **Angular** frontend and **Spring Boot** backend, synced via **OpenAPI/Swagger**.
 
-## Development server
+## Project Structure
 
-To start a local development server, run:
-
-```bash
-ng serve
+```
+Exam/
+├── backend/          # Spring Boot REST API (Java 17, SQLite)
+│   ├── src/
+│   ├── pom.xml
+│   └── run.ps1
+└── frontend/         # Angular 19 SPA
+    ├── openapi/          # OpenAPI spec (synced from backend)
+    ├── src/app/api/      # Auto-generated client (DO NOT EDIT)
+    ├── src/app/services/ # Facade services wrapping generated API
+    └── scripts/          # Sync scripts
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Quick Start
 
-## Code scaffolding
+### 1. Start Backend (port 8080)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```powershell
+cd backend
+.\mvnw.cmd spring-boot:run
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Or: `.\run.ps1`
 
-```bash
-ng generate --help
+### 2. Start Frontend (port 4200)
+
+```powershell
+cd frontend
+npm install
+npm start
 ```
 
-## Building
+Open: **http://localhost:4200**
 
-To build the project run:
+### 3. Swagger UI (test API)
 
-```bash
-ng build
+Open: **http://localhost:8080/swagger-ui.html**
+
+Raw OpenAPI JSON: **http://localhost:8080/api-docs**
+
+## OpenAPI Sync (Backend ↔ Frontend)
+
+When you modify backend controllers, sync the OpenAPI spec and API docs:
+
+```powershell
+cd frontend
+npm run sync:api
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+This will:
+1. Fetch the latest OpenAPI spec from `http://localhost:8080/api-docs`
+2. Save it to `openapi/openapi.json` and `public/openapi/openapi.json`
+3. Regenerate API reference in `src/app/api/` (used by the **API Docs** page)
 
-## Running unit tests
+**Runtime HTTP calls** use the services in `src/app/services/` (direct HttpClient) so all buttons (Add, Edit, Delete, order lines, attachments) work reliably against the same backend Swagger documents.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## API Endpoints
 
-```bash
-ng test
-```
+| Resource | Endpoint |
+|----------|----------|
+| Orders | `GET/POST /api/orders`, `GET/PUT/DELETE /api/orders/{id}` |
+| Order Lines | `GET/POST /api/orders/{orderId}/lines`, `DELETE .../lines/{lineId}` |
+| Attachments | `GET/POST /api/orders/{orderId}/attachemets`, `DELETE .../attachemets/{id}` |
 
-## Running end-to-end tests
+## Frontend Pages
 
-For end-to-end (e2e) testing, run:
+- **/** — Order list (Add, Edit, Delete)
+- **/orders/new** — Create new order
+- **/orders/:id** — Order details (3 sections: details, lines, attachments)
+- **/api-docs** — In-app API documentation (synced with Swagger)
 
-```bash
-ng e2e
-```
+## Tech Stack
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Backend:** Spring Boot 3.5, Spring Data JPA, SQLite, springdoc-openapi
+- **Frontend:** Angular 19, HttpClient, ng-openapi-gen
+- **Sync:** OpenAPI 3.1 spec → auto-generated TypeScript client
