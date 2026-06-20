@@ -23,10 +23,13 @@ Exam/
 
 ```powershell
 cd backend
-.\mvnw.cmd spring-boot:run
+.\run.ps1
 ```
 
-Or: `.\run.ps1`
+Or: `.\run.cmd`
+
+> **Port 8080 already in use?** Run `.\stop.ps1` first, then `.\run.ps1` again.  
+> The run scripts now stop any previous backend on port 8080 automatically before starting.
 
 ### 2. Start Frontend (port 4200)
 
