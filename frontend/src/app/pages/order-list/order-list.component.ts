@@ -15,6 +15,7 @@ export class OrderListComponent implements OnInit {
   orders: Order[] = [];
   loading = true;
   toastMessage = '';
+  toastIsError = false;
 
   constructor(
     private orderService: OrderService,
@@ -46,7 +47,7 @@ export class OrderListComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
-        this.showToast('Failed to load orders. Is the backend running?');
+        this.showToast('Failed to load orders. Is the backend running?', true);
       }
     });
   }
@@ -66,13 +67,14 @@ export class OrderListComponent implements OnInit {
           this.showToast('Order deleted successfully');
           this.loadOrders();
         },
-        error: () => this.showToast('Failed to delete order')
+        error: () => this.showToast('Failed to delete order', true)
       });
     }
   }
 
-  private showToast(message: string): void {
+  private showToast(message: string, isError = false): void {
     this.toastMessage = message;
+    this.toastIsError = isError;
     setTimeout(() => this.toastMessage = '', 3000);
   }
 }

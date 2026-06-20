@@ -73,4 +73,4 @@
   </div>
 </div>
 
-<div class="toast toast-success" *ngIf="toastMessage">{{ toastMessage }}</div>
+<div class="toast" [ngClass]="toastIsError ? 'toast-error' : 'toast-success'" *ngIf="toastMessage">{{ toastMessage }}</div>

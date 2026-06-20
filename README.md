@@ -46,7 +46,7 @@ Raw OpenAPI JSON: **http://localhost:8080/api-docs**
 
 ## OpenAPI Sync (Backend ↔ Frontend)
 
-When you modify backend controllers, sync the frontend automatically:
+When you modify backend controllers, sync the OpenAPI spec and API docs:
 
 ```powershell
 cd frontend
@@ -56,9 +56,9 @@ npm run sync:api
 This will:
 1. Fetch the latest OpenAPI spec from `http://localhost:8080/api-docs`
 2. Save it to `openapi/openapi.json` and `public/openapi/openapi.json`
-3. Regenerate Angular models & services in `src/app/api/`
+3. Regenerate API reference in `src/app/api/` (used by the **API Docs** page)
 
-The facade services in `src/app/services/` wrap the generated API and stay compatible with the UI.
+**Runtime HTTP calls** use the services in `src/app/services/` (direct HttpClient) so all buttons (Add, Edit, Delete, order lines, attachments) work reliably against the same backend Swagger documents.
 
 ## API Endpoints
 

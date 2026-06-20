@@ -1,22 +1,24 @@
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
-import { AttachmentsService as GeneratedAttachmentsService } from '../api/services/attachments.service';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Attachment } from '../models/order.model';
+import { environment } from '../../environments/environment';
 
-/** Facade over Swagger-generated AttachmentsService — regenerate via `npm run sync:api` */
 @Injectable({ providedIn: 'root' })
 export class AttachmentService {
-  constructor(private api: GeneratedAttachmentsService) {}
+  private baseUrl = `${environment.apiUrl}/orders`;
+
+  constructor(private http: HttpClient) {}
 
   getAll(orderId: number): Observable<Attachment[]> {
-    return from(this.api.getAllAttachments({ orderId }));
+    return this.http.get<Attachment[]>(`${this.baseUrl}/${orderId}/attachemets`);
   }
 
   create(orderId: number, attachment: Attachment): Observable<Attachment> {
-    return from(this.api.createAttachment({ orderId, body: attachment }));
+    return this.http.post<Attachment>(`${this.baseUrl}/${orderId}/attachemets`, attachment);
   }
 
   delete(orderId: number, attachmentId: number): Observable<void> {
-    return from(this.api.deleteAttachment({ orderId, attachemetsid: attachmentId }));
+    return this.http.delete<void>(`${this.baseUrl}/${orderId}/attachemets/${attachmentId}`);
   }
 }

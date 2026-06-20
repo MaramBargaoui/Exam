@@ -1,30 +1,32 @@
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
-import { OrdersService as GeneratedOrdersService } from '../api/services/orders.service';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Order } from '../models/order.model';
+import { environment } from '../../environments/environment';
 
-/** Facade over Swagger-generated OrdersService — regenerate via `npm run sync:api` */
 @Injectable({ providedIn: 'root' })
 export class OrderService {
-  constructor(private api: GeneratedOrdersService) {}
+  private apiUrl = `${environment.apiUrl}/orders`;
+
+  constructor(private http: HttpClient) {}
 
   getAll(): Observable<Order[]> {
-    return from(this.api.getAllOrders());
+    return this.http.get<Order[]>(this.apiUrl);
   }
 
   getById(id: number): Observable<Order> {
-    return from(this.api.getOrderById({ orderId: id }));
+    return this.http.get<Order>(`${this.apiUrl}/${id}`);
   }
 
   create(order: Order): Observable<Order> {
-    return from(this.api.createOrder({ body: order }));
+    return this.http.post<Order>(this.apiUrl, order);
   }
 
   update(id: number, order: Order): Observable<Order> {
-    return from(this.api.updateOrder({ orderId: id, body: order }));
+    return this.http.put<Order>(`${this.apiUrl}/${id}`, order);
   }
 
   delete(id: number): Observable<void> {
-    return from(this.api.deleteOrder({ orderId: id }));
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
