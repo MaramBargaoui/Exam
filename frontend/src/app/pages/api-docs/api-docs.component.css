@@ -1,0 +1,163 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 0.35rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.subtitle code {
+  background: var(--background);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.82rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.header-actions a {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.sync-banner {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--primary-light) 0%, #f0fdf4 100%);
+  border-color: #bfdbfe;
+}
+
+.sync-icon {
+  font-size: 2rem;
+}
+
+.sync-banner strong {
+  font-size: 1.05rem;
+}
+
+.sync-banner p {
+  margin: 0.25rem 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.sync-meta {
+  font-size: 0.8rem;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.endpoints-grid {
+  display: grid;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.endpoint-group {
+  padding: 1.25rem 1.5rem;
+}
+
+.endpoint-group h2 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.endpoint {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.endpoint:last-child {
+  border-bottom: none;
+}
+
+.method-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+  min-width: 4rem;
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+.method-get { background: #dbeafe; color: #1d4ed8; }
+.method-post { background: #dcfce7; color: #15803d; }
+.method-put { background: #fef3c7; color: #b45309; }
+.method-delete { background: #fee2e2; color: #b91c1c; }
+
+.endpoint-path {
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+  font-size: 0.85rem;
+  background: var(--background);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  flex: 1;
+}
+
+.operation-id {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.sync-help {
+  padding: 1.5rem;
+}
+
+.sync-help h3 {
+  margin: 0 0 0.75rem;
+}
+
+.sync-help ol {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+.sync-help code {
+  background: var(--background);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .page-header {
+    flex-direction: column;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .header-actions a {
+    justify-content: center;
+  }
+}

@@ -1,0 +1,43 @@
+<div class="page-header">
+  <div>
+    <h1>API Documentation</h1>
+    <p class="subtitle">Synced with backend Swagger — run <code>npm run sync:api</code> after backend changes</p>
+  </div>
+  <div class="header-actions">
+    <a [href]="swaggerUrl" target="_blank" rel="noopener" class="btn-primary">
+      Open Swagger UI ↗
+    </a>
+    <a [href]="apiDocsUrl" target="_blank" rel="noopener" class="btn-secondary">
+      Raw OpenAPI JSON ↗
+    </a>
+  </div>
+</div>
+
+<div class="sync-banner card" *ngIf="spec">
+  <span class="sync-icon">🔄</span>
+  <div>
+    <strong>{{ spec.info.title }}</strong>
+    <p>{{ spec.info.description }}</p>
+    <span class="sync-meta">Version {{ spec.info.version }} · {{ endpoints.length }} endpoints · Frontend client auto-generated from this spec</span>
+  </div>
+</div>
+
+<div class="endpoints-grid" *ngIf="spec">
+  <div class="card endpoint-group" *ngFor="let tag of tagNames">
+    <h2>{{ tag }}</h2>
+    <div class="endpoint" *ngFor="let ep of groupedEndpoints[tag]">
+      <span class="method-badge" [ngClass]="getMethodClass(ep.method)">{{ ep.method }}</span>
+      <code class="endpoint-path">{{ ep.path }}</code>
+      <span class="operation-id">{{ ep.operationId }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="card sync-help">
+  <h3>How sync works</h3>
+  <ol>
+    <li>Backend controllers define the REST API (Spring Boot + springdoc)</li>
+    <li>Run <code>npm run sync:api</code> — fetches <code>/api-docs</code> and regenerates Angular client</li>
+    <li>Frontend models &amp; services in <code>src/app/api/</code> update automatically</li>
+  </ol>
+</div>

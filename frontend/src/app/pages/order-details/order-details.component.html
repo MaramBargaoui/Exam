@@ -1,0 +1,160 @@
+<div class="page-top">
+  <button class="btn-ghost back-btn" (click)="back()">← Back to Orders</button>
+</div>
+
+<div class="page-header">
+  <div>
+    <h1>{{ isNew ? 'New Order' : 'Order #' + orderId }}</h1>
+    <p class="subtitle" *ngIf="!isNew">
+      <span class="badge" [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
+      <span class="meta">{{ orderLines.length }} lines · {{ attachments.length }} attachments</span>
+    </p>
+    <p class="subtitle" *ngIf="isNew">Fill in the details and create the order</p>
+  </div>
+</div>
+
+<div class="loading-state" *ngIf="loading">
+  <div class="spinner"></div>
+  <p>Loading order...</p>
+</div>
+
+<ng-container *ngIf="!loading">
+  <!-- SECTION 1: Order Details -->
+  <section class="card section-card">
+    <div class="section-header">
+      <span class="section-icon">📄</span>
+      <div>
+        <h2>Order Details</h2>
+        <p>Date and status of the customer order</p>
+      </div>
+    </div>
+
+    <form class="order-form">
+      <div class="form-group">
+        <label for="dateOrder">Order Date</label>
+        <input id="dateOrder" type="datetime-local" [(ngModel)]="order.dateOrder" name="dateOrder" required />
+      </div>
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select id="status" [(ngModel)]="order.status" name="status">
+          <option value="PENDING">Pending</option>
+          <option value="CONFIRMED">Confirmed</option>
+          <option value="SHIPPED">Shipped</option>
+          <option value="DELIVERED">Delivered</option>
+          <option value="CANCELLED">Cancelled</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-primary" (click)="saveOrder()">
+          {{ isNew ? 'Create Order' : 'Update Order' }}
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- SECTION 2: Order Lines -->
+  <section class="card section-card">
+    <div class="section-header">
+      <span class="section-icon">🛒</span>
+      <div>
+        <h2>Order Lines</h2>
+        <p>Products purchased in this order</p>
+      </div>
+      <span class="section-total" *ngIf="!isNew && orderLines.length > 0">
+        Total: {{ orderTotal | currency }}
+      </span>
+    </div>
+
+    <div class="hint-banner" *ngIf="isNew">
+      Save the order first before adding order lines.
+    </div>
+
+    <div class="table-wrapper" *ngIf="!isNew || orderLines.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Subtotal</th>
+            <th class="actions-col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let line of orderLines">
+            <td><strong>{{ line.designation }}</strong></td>
+            <td>{{ line.quantity }}</td>
+            <td>{{ line.price | currency }}</td>
+            <td>{{ line.quantity * line.price | currency }}</td>
+            <td class="actions-col">
+              <button class="btn-danger btn-sm" (click)="deleteOrderLine(line.id!)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty-inline" *ngIf="!isNew && orderLines.length === 0">
+      No order lines yet. Add a product below.
+    </div>
+
+    <div class="add-form" *ngIf="!isNew">
+      <h3>Add New Order Line</h3>
+      <div class="inline-form">
+        <input type="text" placeholder="Product name" [(ngModel)]="newLine.designation" name="lineDesignation" />
+        <input type="number" placeholder="Qty" [(ngModel)]="newLine.quantity" name="lineQuantity" min="1" />
+        <input type="number" placeholder="Price" [(ngModel)]="newLine.price" name="linePrice" min="0" step="0.01" />
+        <button class="btn-primary" (click)="addOrderLine()" [disabled]="!newLine.designation">+ Add Line</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: Attachments -->
+  <section class="card section-card">
+    <div class="section-header">
+      <span class="section-icon">📎</span>
+      <div>
+        <h2>Attachments</h2>
+        <p>PDF, images, or Word files linked to this order</p>
+      </div>
+    </div>
+
+    <div class="hint-banner" *ngIf="isNew">
+      Save the order first before adding attachments.
+    </div>
+
+    <div class="attachment-list" *ngIf="attachments.length > 0">
+      <div class="attachment-item" *ngFor="let att of attachments">
+        <span class="file-icon">{{ getFileIcon(att.typeFile) }}</span>
+        <div class="attachment-info">
+          <span class="file-type">{{ att.typeFile | uppercase }}</span>
+          <a [href]="att.urlFile" target="_blank" rel="noopener">{{ att.urlFile }}</a>
+        </div>
+        <button class="btn-danger btn-sm" (click)="deleteAttachment(att.id!)">Delete</button>
+      </div>
+    </div>
+
+    <div class="empty-inline" *ngIf="!isNew && attachments.length === 0">
+      No attachments yet. Add a file below.
+    </div>
+
+    <div class="add-form" *ngIf="!isNew">
+      <h3>Add New Attachment</h3>
+      <div class="inline-form">
+        <select [(ngModel)]="newAttachment.typeFile" name="attType">
+          <option value="" disabled selected>File type</option>
+          <option value="pdf">PDF</option>
+          <option value="image">Image</option>
+          <option value="word">Word</option>
+        </select>
+        <input type="text" placeholder="File URL (e.g. http://files.example.com/doc.pdf)" [(ngModel)]="newAttachment.urlFile" name="attUrl" />
+        <button class="btn-primary" (click)="addAttachment()" [disabled]="!newAttachment.typeFile || !newAttachment.urlFile">
+          + Add Attachment
+        </button>
+      </div>
+    </div>
+  </section>
+</ng-container>
+
+<div class="toast toast-success" *ngIf="toastMessage">{{ toastMessage }}</div>
+<div class="toast toast-error" *ngIf="errorMessage">{{ errorMessage }}</div>

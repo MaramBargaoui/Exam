@@ -13,7 +13,10 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Backend API - Order Management")
-                        .description("REST API to manage customer orders, order lines and attachments (SQLite)")
+                        .description("REST API to manage customer orders, order lines and attachments (SQLite). "
+                                + "Swagger UI: http://localhost:8080/swagger-ui.html | "
+                                + "OpenAPI JSON: http://localhost:8080/api-docs | "
+                                + "Frontend sync: npm run sync:api")
                         .version("1.0"));
     }
 }

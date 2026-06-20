@@ -38,6 +38,18 @@ public class OrderController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{orderId}")
+    public ResponseEntity<Order> updateOrder(@PathVariable Integer orderId,
+                                             @Valid @RequestBody Order orderDetails) {
+        return orderRepository.findById(orderId)
+                .map(order -> {
+                    order.setDateOrder(orderDetails.getDateOrder());
+                    order.setStatus(orderDetails.getStatus());
+                    return ResponseEntity.ok(orderRepository.save(order));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{orderId}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Integer orderId) {
         return orderRepository.findById(orderId)

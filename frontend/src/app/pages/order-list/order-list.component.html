@@ -1,0 +1,76 @@
+<div class="page-header">
+  <div>
+    <h1>Orders</h1>
+    <p class="subtitle">Manage customer orders, lines, and attachments</p>
+  </div>
+  <button class="btn-primary" (click)="addOrder()">
+    + Add New Order
+  </button>
+</div>
+
+<div class="stats-row" *ngIf="!loading">
+  <div class="stat-card card">
+    <span class="stat-value">{{ orders.length }}</span>
+    <span class="stat-label">Total Orders</span>
+  </div>
+  <div class="stat-card card">
+    <span class="stat-value">{{ pendingCount }}</span>
+    <span class="stat-label">Pending</span>
+  </div>
+  <div class="stat-card card">
+    <span class="stat-value">{{ confirmedCount }}</span>
+    <span class="stat-label">Confirmed</span>
+  </div>
+</div>
+
+<div class="loading-state" *ngIf="loading">
+  <div class="spinner"></div>
+  <p>Loading orders...</p>
+</div>
+
+<div class="card table-card" *ngIf="!loading">
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Lines</th>
+          <th>Attachments</th>
+          <th class="actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of orders" class="order-row" (click)="editOrder(order.id!)">
+          <td><span class="order-id">#{{ order.id }}</span></td>
+          <td>{{ order.dateOrder | date:'MMM d, y, h:mm a' }}</td>
+          <td>
+            <span class="badge" [ngClass]="getStatusClass(order.status)">
+              {{ order.status }}
+            </span>
+          </td>
+          <td>
+            <span class="count-chip">{{ order.orderLines?.length ?? 0 }}</span>
+          </td>
+          <td>
+            <span class="count-chip">{{ order.attachments?.length ?? 0 }}</span>
+          </td>
+          <td class="actions-col" (click)="$event.stopPropagation()">
+            <button class="btn-secondary btn-sm" (click)="editOrder(order.id!)">Edit</button>
+            <button class="btn-danger btn-sm" (click)="deleteOrder(order.id!)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" *ngIf="orders.length === 0">
+    <span class="empty-icon">📋</span>
+    <h3>No orders yet</h3>
+    <p>Create your first customer order to get started.</p>
+    <button class="btn-primary" (click)="addOrder()">+ Add New Order</button>
+  </div>
+</div>
+
+<div class="toast toast-success" *ngIf="toastMessage">{{ toastMessage }}</div>
